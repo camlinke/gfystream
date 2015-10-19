@@ -12,7 +12,7 @@ Vagrant.configure(2) do |config|
 
   # Every Vagrant development environment requires a box. You can search for
   # boxes at https://atlas.hashicorp.com/search.
-  config.vm.box = "base"
+  config.vm.box = "ubuntu/trusty64"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
@@ -23,6 +23,26 @@ Vagrant.configure(2) do |config|
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
   # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.network "forwarded_port", guest: 8080, host: 8080
+
+  config.vm.define :local do |local|
+    local.vm.box = "ubuntu/trusty64"
+  end
+
+  # config.vm.hostname = 'gfystream'
+  # config.vm.define :digital_ocean do |digital_ocean|
+  #   digital_ocean.vm.provider :digital_ocean do |provider, override|
+  #     override.ssh.private_key_path = '~/.ssh/id_rsa'
+  #     override.vm.box = 'digital_ocean'
+  #     override.vm.box_url = "https://github.com/smdahlen/vagrant-digitalocean/raw/master/box/digital_ocean.box"
+
+  #     provider.ssh_key_name = 'SSH Key'
+  #     provider.token = ENV['DO_TOKEN']
+  #     provider.image = 'ubuntu-14-04-x64'
+  #     provider.region = 'nyc2'
+  #     provider.size = '512mb'
+  #   end
+  # end
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
@@ -66,6 +86,40 @@ Vagrant.configure(2) do |config|
   # documentation for more information about their specific syntax and use.
   # config.vm.provision "shell", inline: <<-SHELL
   #   sudo apt-get update
-  #   sudo apt-get install -y apache2
+  #   sudo apt-get install -y nginx
+
+  #   sudo rm /etc/nginx/sites-available/default
+  #   sudo touch /etc/nginx/sites-available/default
+
+  #   sudo cat >> /etc/nginx/sites-available/default <<'EOF'
+
+  #   server {
+  #       listen 8080;
+
+  #       location / {
+  #           proxy_pass http://localhost:8000;
+  #           proxy_http_version 1.1;
+  #       proxy_set_header Upgrade $http_upgrade;
+  #       proxy_set_header Connection "upgrade";
+  #       proxy_set_header Host $host;
+  #       }
+  #   }
+
+  #   server {
+  #       listen 80;
+
+  #       location / {
+  #           proxy_pass http://localhost:8000;
+  #           proxy_http_version 1.1;
+  #       proxy_set_header Upgrade $http_upgrade;
+  #       proxy_set_header Connection "upgrade";
+  #       proxy_set_header Host $host;
+  #       }
+  #   }
+
+  #   EOF
+
+  #   sudo service nginx restart
   # SHELL
+  config.vm.provision :shell, :path => "provision.sh"
 end
