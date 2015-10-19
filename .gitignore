@@ -55,3 +55,12 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# Vagrant stuff
+acceptance_config.yml
+boxes/*
+/.vagrant
+/website/docs/.vagrant
+/website/www/.vagrant
+/vagrant-spec.config.rb
+/.vagrant/machines/default/virtualbox
